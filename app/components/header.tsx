@@ -50,18 +50,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ListItem } from "./listitem";
-import { useSession, signOut } from "next-auth/react";
 
 export function Header() {
-
-  const { data: session, status } = useSession();
-
-  const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    // You might want to redirect the user or update the UI here
-  };
-
-
   return (
     <header className="sticky z-50 bg-white top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-4">
       <nav className="hidden flex-col gap-4 text-lg font-medium md:flex md:flex-row md:items-center md:gap-4 md:text-sm lg:gap-4">
@@ -231,7 +221,7 @@ export function Header() {
           </div>
         </form>
 
-        {status === "authenticated" ? (
+        {/* {status === "authenticated" ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -251,20 +241,20 @@ export function Header() {
               <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
-          <>
-            <Button>
-              <Link href="/login" className="flex items-center gap-2">
-                Login
-              </Link>
-            </Button>
-            <Button>
-              <Link href="/signup" className="flex items-center gap-2">
-                Sign Up
-              </Link>
-            </Button>
-          </>
-        )}
+        ) : ( */}
+        <>
+          <Button>
+            <Link href="/login" className="flex items-center gap-2">
+              Login
+            </Link>
+          </Button>
+          <Button>
+            <Link href="/signup" className="flex items-center gap-2">
+              Sign Up
+            </Link>
+          </Button>
+        </>
+        {/* )} */}
       </div>
     </header>
   );
