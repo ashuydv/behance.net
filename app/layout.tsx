@@ -1,28 +1,16 @@
-import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import ConditionalLayout from "./components/conditionallayout";
-import { NextAuthProvider } from "./providers";
+import { ReactNode } from "react"
+import { Providers } from "./providers"
+import './globals.css'
+import { Montserrat } from 'next/font/google'
 
-const inter = Montserrat({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Digital Signage Center",
-  description: "A marketplace where you get everyone",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <Toaster richColors />
+      <body className={montserrat.className}>
+        <Providers>{children}</Providers>
       </body>
     </html>
-  );
+  )
 }

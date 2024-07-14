@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,30 +11,49 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import React from 'react'
+import { signIn } from "next-auth/react";
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams ? searchParams.get('callbackUrl') : '/dashboard';
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Add your login logic here
-        // This could be an API call to your backend to verify the user's credentials
-        const isValid = await mockLogin(email, password); // Replace mockLogin with your actual login function
+        const result = await signIn('credentials', {
+            redirect: false,
+            email,
+            password
+        })
 
-        if (isValid) {
-            toast.success("Logged in successfully");
-            router.push("/dashboard");
+        if(result?.error) {
+            console.error(result.error) 
         } else {
-            toast.error("Invalid email or password");
+            router.push(callbackUrl || "/dashboard")
         }
-    };
 
-    // Mock login function, replace with your actual API call
-    const mockLogin = async (email: string, password: string) => {
-        return email === "test@example.com" && password === "password123";
+        // try {
+        //     const response = await fetch('/api/auth/signin', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({ email, password }),
+        //     });
+
+        //     if (response.ok) {
+        //         const data = await response.json();
+        //         toast.success("Logged in successfully");
+        //         router.push("/dashboard");
+        //     } else {
+        //         const errorData = await response.json();
+        //         toast.error(errorData.error || "Login failed");
+        //     }
+        // } catch (error) {
+        //     console.error('Login error:', error);
+        //     toast.error("An error occurred. Please try again.");
+        // }
     };
 
     return (

@@ -15,38 +15,58 @@ import React from 'react'
 type Props = {}
 
 const SignUp = (props: Props) => {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [bio, setBio] = useState("");
     const router = useRouter();
 
-    const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Add your SignUp logic here
-        // This could be an API call to your backend to verify the user's credentials
-        const isValid = await mockSignUp(email, password); // Replace mockSignUp with your actual SignUp function
-
-        if (isValid) {
-            toast.success("Logged in succesfully");
-            router.push("/dashboard");
-        } else {
-            toast.error("Invalid email or password");
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
         }
-    };
 
-    // Mock SignUp function, replace with your actual API call
-    const mockSignUp = async (email: string, password: string) => {
-        return email === "test@example.com" && password === "password123";
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    username,
+                    email,
+                    password,
+                    bio
+                }),
+            });
+
+            if (response.ok) {
+                toast.success("Account created successfully");
+                router.push("/dashboard");
+            } else {
+                const errorData = await response.json();
+                toast.error(errorData.error || "Registration failed");
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            toast.error("An error occurred. Please try again.");
+        }
     };
 
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
             <div className="hidden bg-muted lg:block">
                 <Image
-                    src="/login.jpg"
-                    alt="Image"
-                    width="1920"
-                    height="1080"
+                    src="/signup.jpg"
+                    alt="Sign Up"
+                    width={1920}
+                    height={1080}
                     className="w-full h-screen object-bottom object-cover dark:brightness-[0.2] dark:grayscale"
                 />
             </div>
@@ -55,31 +75,56 @@ const SignUp = (props: Props) => {
                     <div className="grid gap-2 text-center">
                         <h1 className="text-3xl font-bold">Sign up</h1>
                         <p className="text-balance text-muted-foreground">
-                            Enter your email below to SignUp to your account
+                            Create your account to get started
                         </p>
                     </div>
                     <div className="grid gap-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input
+                                id="firstName"
+                                type="text"
+                                placeholder="John"
+                                required
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input
+                                id="lastName"
+                                type="text"
+                                placeholder="Doe"
+                                required
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                                id="username"
+                                type="text"
+                                placeholder="johndoe"
+                                required
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
-                                placeholder="m@example.com"
+                                placeholder="john@example.com"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="grid gap-2">
-                            <div className="flex items-center">
-                                <Label htmlFor="password">Password</Label>
-                                <Link
-                                    href="/forgot-password"
-                                    className="ml-auto inline-block text-sm underline"
-                                >
-                                    Forgot your password?
-                                </Link>
-                            </div>
+                            <Label htmlFor="password">Password</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -88,17 +133,37 @@ const SignUp = (props: Props) => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="confirmPassword">Confirm Password</Label>
+                            <Input
+                                id="confirmPassword"
+                                type="password"
+                                required
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="bio">Bio</Label>
+                            <Input
+                                id="bio"
+                                type="text"
+                                placeholder="Tell us about yourself"
+                                value={bio}
+                                onChange={(e) => setBio(e.target.value)}
+                            />
+                        </div>
                         <Button type="submit" className="w-full">
-                            SignUp
+                            Sign Up
                         </Button>
                         <Button variant="outline" className="w-full">
-                            SignUp with Google
+                            Sign Up with Google
                         </Button>
                     </div>
                     <div className="mt-4 text-center text-sm">
-                        Don&apos;t have an account?{" "}
-                        <Link href="/signup" className="underline">
-                            Sign up
+                        Already have an account?{" "}
+                        <Link href="/login" className="underline">
+                            Log in
                         </Link>
                     </div>
                 </form>

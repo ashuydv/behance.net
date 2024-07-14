@@ -4,6 +4,7 @@ import Gallery from "./components/galleries";
 import Index from './homeIndex';
 import { Header } from './components/header';
 import Footer from './components/footer';
+import DashboardPage from './dashboard/page';
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -19,8 +20,16 @@ export default async function Home() {
     <>
       {showHeaderFooter && <Header />}
       <main>
-        <Index />
-        <Gallery />
+        {pathname === '/dashboard' ? (
+          <div className="min-h-screen">
+            <DashboardPage />
+          </div>
+        ) : (
+          <>
+            <Index />
+            <Gallery />
+          </>
+        )}
       </main>
       {showHeaderFooter && <Footer />}
     </>

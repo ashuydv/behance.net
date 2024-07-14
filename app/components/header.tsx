@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import {
   Activity,
@@ -8,6 +10,7 @@ import {
   Menu,
   Package2,
   Search,
+  Upload,
   Users,
 } from "lucide-react";
 
@@ -50,8 +53,26 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ListItem } from "./listitem";
+import { signOut, useSession } from "next-auth/react";
+import { useState } from "react";
+import DialogModal from "./dialogmodal";
 
 export function Header() {
+  const { data: session, status } = useSession();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState<'blog' | 'image' | 'video'>('blog');
+
+  const openDialog = (type: 'blog' | 'image' | 'video') => {
+    setDialogType(type);
+    setIsDialogOpen(true);
+  };
+  const closeDialog = () => setIsDialogOpen(false);
+
+  const handleSignOut = () => {
+    signOut();
+  }
+
+  
   return (
     <header className="sticky z-50 bg-white top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-4">
       <nav className="hidden flex-col gap-4 text-lg font-medium md:flex md:flex-row md:items-center md:gap-4 md:text-sm lg:gap-4">
@@ -101,7 +122,7 @@ export function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <Link
+        {/* <Link
           href="#"
           className="text-foreground transition-colors hover:text-foreground text-base"
         >
@@ -121,7 +142,7 @@ export function Header() {
           <span className="bg-gradient-to-r from-[#0088fd] text-xs to-[#001faa] rounded text-white px-2 py-1 ml-2">
             pro
           </span>
-        </Link>
+        </Link> */}
         {/* <NavigationMenuDemo /> */}
         <NavigationMenu>
           <NavigationMenuList>
@@ -221,41 +242,58 @@ export function Header() {
           </div>
         </form>
 
-        {/* {status === "authenticated" ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <Avatar>
-                  <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || ""} />
-                  <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
-                </Avatar>
-                <span className="sr-only">User menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : ( */}
-        <>
-          <Button>
-            <Link href="/login" className="flex items-center gap-2">
-              Login
-            </Link>
-          </Button>
-          <Button>
-            <Link href="/signup" className="flex items-center gap-2">
-              Sign Up
-            </Link>
-          </Button>
-        </>
-        {/* )} */}
+        {status === "authenticated" ? (
+          <div className="flex items-center justify-end gap-[10px]">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" size="icon" className="text-sm p-3">
+                  <Upload />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onSelect={() => openDialog('blog')}>Blogs</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openDialog('image')}>Image</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openDialog("video")}>Videos</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" size="icon" className="rounded-full">
+                  <Avatar>
+                    <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || ""} />
+                    <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
+                  </Avatar>
+                  <span className="sr-only">User menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <>
+            <Button>
+              <Link href="/login" className="flex items-center gap-2">
+                Login
+              </Link>
+            </Button>
+            <Button>
+              <Link href="/signup" className="flex items-center gap-2">
+                Sign Up
+              </Link>
+            </Button>
+          </>
+        )}
       </div>
+
+      <DialogModal isOpen={isDialogOpen} onClose={closeDialog} type={dialogType} />
+
     </header>
   );
 }
