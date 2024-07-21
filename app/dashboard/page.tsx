@@ -1,3 +1,13 @@
+// export default async function DashboardPage() {
+
+//   return (
+//     <section>
+//       <h1>Home</h1>
+      
+//     </section>
+//   );
+// }
+
 'use client'
 
 import { useSession } from "next-auth/react"

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import {
@@ -60,19 +60,20 @@ import DialogModal from "./dialogmodal";
 export function Header() {
   const { data: session, status } = useSession();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dialogType, setDialogType] = useState<'blog' | 'image' | 'video'>('blog');
+  const [dialogType, setDialogType] = useState<"blog" | "image" | "video">(
+    "blog"
+  );
 
-  const openDialog = (type: 'blog' | 'image' | 'video') => {
+  const openDialog = (type: "blog" | "image" | "video") => {
     setDialogType(type);
     setIsDialogOpen(true);
   };
   const closeDialog = () => setIsDialogOpen(false);
 
   const handleSignOut = () => {
-    signOut();
-  }
+    signOut({callbackUrl: "/login"});
+  };
 
-  
   return (
     <header className="sticky z-50 bg-white top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-4">
       <nav className="hidden flex-col gap-4 text-lg font-medium md:flex md:flex-row md:items-center md:gap-4 md:text-sm lg:gap-4">
@@ -251,17 +252,32 @@ export function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => openDialog('blog')}>Blogs</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => openDialog('image')}>Image</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => openDialog("video")}>Videos</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openDialog("blog")}>
+                  Blogs
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openDialog("image")}>
+                  Image
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => openDialog("video")}>
+                  Videos
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="rounded-full"
+                >
                   <Avatar>
-                    <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || ""} />
-                    <AvatarFallback>{session.user?.name?.[0] || "U"}</AvatarFallback>
+                    <AvatarImage
+                      src={session.user?.image || undefined}
+                      alt={session.user?.name || ""}
+                    />
+                    <AvatarFallback>
+                      {session.user?.name?.[0] || "U"}
+                    </AvatarFallback>
                   </Avatar>
                   <span className="sr-only">User menu</span>
                 </Button>
@@ -272,7 +288,9 @@ export function Header() {
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -292,8 +310,11 @@ export function Header() {
         )}
       </div>
 
-      <DialogModal isOpen={isDialogOpen} onClose={closeDialog} type={dialogType} />
-
+      <DialogModal
+        isOpen={isDialogOpen}
+        onClose={closeDialog}
+        type={dialogType}
+      />
     </header>
   );
 }

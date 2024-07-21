@@ -10,23 +10,23 @@ interface User {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const client = await clientPromise;
-    const db = client.db('your_database_name');
-    const collection = db.collection<User>('users');
+    // const client = await clientPromise;
+    // const db = client.db();
+    // const collection = db.collection<User>('users');
 
-    switch (req.method) {
-        case 'GET':
-            return handleGet(req, res, collection);
-        case 'POST':
-            return handlePost(req, res, collection);
-        case 'PUT':
-            return handlePut(req, res, collection);
-        case 'DELETE':
-            return handleDelete(req, res, collection);
-        default:
-            res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-            res.status(405).end(`Method ${req.method} Not Allowed`);
-    }
+    // switch (req.method) {
+    //     case 'GET':
+    //         return handleGet(req, res, collection);
+    //     case 'POST':
+    //         return handlePost(req, res, collection);
+    //     case 'PUT':
+    //         return handlePut(req, res, collection);
+    //     case 'DELETE':
+    //         return handleDelete(req, res, collection);
+    //     default:
+    //         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+    //         res.status(405).end(`Method ${req.method} Not Allowed`);
+    // }
 }
 
 // GET - Retrieve all users or a single user
