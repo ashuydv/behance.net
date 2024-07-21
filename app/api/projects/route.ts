@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Project from '@/models/Project';
 import { auth } from '@/app/auth';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 
 // GET all projects or a single project
 export async function GET(request: NextRequest) {
@@ -36,10 +38,28 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const body = await request.json();
+        const formData = await request.formData();
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const type = formData.get('type') as string;
+        const file = formData.get('file') as File | null;
+
+        let filePath = '';
+        if (file) {
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const fileName = `${Date.now()}-${file.name}`;
+            filePath = path.join(process.cwd(), 'public', 'uploads', fileName);
+            await writeFile(filePath, buffer);
+            filePath = `/uploads/${fileName}`;
+        }
+
         const project = new Project({
-            ...body,
-            creator: session.user.id
+            title,
+            description,
+            type,
+            creator: session.user.id,
+            ...(filePath && { filePath }),
         });
 
         await project.save();
@@ -49,7 +69,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
-
 // PUT (update) a project
 export async function PUT(request: NextRequest) {
     try {

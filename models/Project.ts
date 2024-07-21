@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 const ProjectSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    images: [{ type: String, requried: true }],
+    type: { type: String, enum: ['blog', 'image', 'video'], required: true },
+    content: { type: String }, // For blog posts
+    images: [{ type: String }], // For image projects and blog post images
+    videoUrl: { type: String }, // For video projects
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
