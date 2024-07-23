@@ -78,6 +78,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (body.type === ProjectType.BLOG && !body.content) {
+      return NextResponse.json(
+        { error: "Content is required for blog" },
+        { status: 400 }
+      );
+    }
+
+    if (body.type === ProjectType.VIDEO && !body.videoUrl) {
+      return NextResponse.json(
+        { error: "Video URL is required for video" },
+        { status: 400 }
+      );
+    }
+
+    if (body.type === ProjectType.IMAGE && !body.images) {
+      return NextResponse.json(
+        { error: "Images are required for image project" },
+        { status: 400 }
+      );
+    }
+
     const project = await prisma.project.create({
       data: {
         title: body.title,
