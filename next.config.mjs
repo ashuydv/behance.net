@@ -15,6 +15,9 @@ const nextConfig = {
     verifyRequest: "/verify-request",
     newUser: "/new-user",
   },
+  images: {
+    domains: ['mir-s3-cdn-cf.behance.net', 'cdn.dribbble.com'],
+  },
 };
 
 export default nextConfig;
