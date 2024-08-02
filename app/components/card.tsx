@@ -59,8 +59,7 @@ const Card = ({ image, videoUrl, link, title, views, likes, creators, platforms 
                         href={link}
                         className="text-muted-foreground transition-colors flex items-center hover:text-foreground text-base"
                     >
-                        {platforms} |
-                        <span className="text-sm">{creators}</span>
+                        {platforms}|{creators}
                     </Link>
                 </div>
                 <div className="flex items-center gap-3 w-full justify-end">

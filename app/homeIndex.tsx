@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import RetroGrid from "@/components/magicui/retro-grid";
 
-
 type Props = {};
 
 const Index = (props: Props) => {
