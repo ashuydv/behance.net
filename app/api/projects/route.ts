@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import dbConnect from "@/lib/dbConnect";
+// import dbConnect from "@/lib/dbConnect";
 import Project from "@/models/Project";
 import { auth } from "@/auth";
 import { writeFile } from "fs/promises";

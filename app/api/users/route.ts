@@ -1,10 +1,10 @@
-import dbConnect from "@/lib/dbConnect";
+// import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     try {
-        await dbConnect();
+        // await dbConnect();
 
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get('page') || '1')

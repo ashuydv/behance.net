@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "../../lib/dbConnect";
+// import clientPromise from "../../lib/dbConnect";
 import { ObjectId } from "mongodb";
 import prisma from "@/lib/db";
 
