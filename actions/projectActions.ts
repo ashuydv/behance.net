@@ -24,9 +24,34 @@ export async function getAllProjects(userId?: string) {
       throw new Error("Unauthorized");
     }
 
+    if (userId) {
+      const projects = await prisma.project.findMany({
+        where: {
+          userId,
+        },
+        orderBy: {
+          updatedAt: "desc",
+        },
+      });
+
+      if (!projects) {
+        return {
+          status: 404,
+          success: false,
+          message: "User not found",
+        };
+      }
+
+      return {
+        data: [...projects],
+        status: 200,
+        success: true,
+        message: "Projects fetched successfully",
+      };
+    }
+
     const response = await prisma.project.findMany({
-      where: userId ? { userId } : {},
-      orderBy: userId ? { updatedAt: "desc" } : { createdAt: "desc" },
+      orderBy: { createdAt: "desc" },
     });
 
     if (response.length === 0) {
@@ -78,7 +103,7 @@ export async function getProjectById(id: string) {
     return {
       status: 200,
       success: true,
-      data: {...project},
+      data: { ...project },
       message: "Project fetched successfully",
     };
   } catch (error) {
