@@ -34,14 +34,6 @@ export async function getAllProjects(userId?: string) {
         },
       });
 
-      if (!projects) {
-        return {
-          status: 404,
-          success: false,
-          message: "User not found",
-        };
-      }
-
       return {
         data: [...projects],
         status: 200,
